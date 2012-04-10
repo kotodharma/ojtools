@@ -104,10 +104,10 @@ sub toString {
 ########################################################################################
 sub match {
     my $self = shift;
-    my($pat, $cmds) = @_;
+    my($cmds) = @_;
     my @found;
 
-    if ($cmds->{P} && $self->name =~ /$pat/i) {
+    if ((my $pat = $cmds->{P}) && $self->name =~ /$pat/i) {
         return ($self->name);
     }
 
@@ -125,29 +125,39 @@ sub match {
         $pat =~ s/([kstp])/N?$x$1/gi;
     }
 
+    ## Find matches
     if ($cmds->{T} || $cmds->{M} || $cmds->{G}) {
         for (my $n = 1; ; $n++) {
             my $la = $self->{$n} || last;
             foreach my $pline (@{ $la }) {
-                if ($pline->match($pat, $cmds)) {
+                if (my $p = $pline->match($pat, $cmds)) {
                     push(@found, $pline);
                 }
             }
         }
     }
-    if ($cmds->{X}) {
-        push(@found, grep /$pat/i, @{ $self->{xlat} });
+    if (my $pat = $cmds->{X}) {
+        push(@found, map { matchcolor($_, $pat) || () } @{ $self->{xlat} });
     }
-    if ($cmds->{N}) {
+    if (my $pat = $cmds->{N}) {
         my @notes = $self->notes;
         if ($cmds->{slash}) {
-  ### this doesn't do the right thing - FIX IT.
+                    ### this doesn't do the right thing - FIX IT.
             ## s/[^a-z0-9]//ig for (@notes);
         }
-        push(@found, grep /$pat/i, @notes);
+        push(@found, map { matchcolor($_, $pat) || () } @notes);
     }
-
     return @found;
+}
+
+########################################################################################
+##
+########################################################################################
+sub matchcolor {
+    my($dat, $pat) = @_;
+    my $color = sprintf "\033[0;;%dm", $main::Config{color};
+    my $nocolor = "\033[0m";
+    $dat =~ s/($pat)/$color$1$nocolor/gi ? $dat : undef;
 }
 
 ########################################################################################
@@ -202,7 +212,7 @@ sub match {
     elsif ($cmds->{G}) {
         $dat = $self->G;
     }
-    $dat =~ /$pat/i;
+    OJ::Text::matchcolor($dat, $pat);
 }
 
 ########################################################################################

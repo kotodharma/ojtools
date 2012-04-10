@@ -15,7 +15,7 @@ use Carp;
 sub logg;
 
 our %opts;
-getopts('hdvnfTMGXNPEJ', \%opts);
+getopts('hdvnfT:M:G:X:N:P:E:J:', \%opts);
 
 if ($opts{h}) {
     unless (exec('perldoc', '-Tt', catfile($FindBin::Bin, $FindBin::Script))) {
@@ -25,10 +25,10 @@ if ($opts{h}) {
     ## NOT REACHED - END OF PROGRAM
 }
 if ($opts{J}) {
-    $opts{M} = $opts{N} = 1;
+    $opts{M} = $opts{N} = $opts{J};
 }
 if ($opts{E}) {
-    $opts{G} = $opts{X} = $opts{N} = 1;
+    $opts{G} = $opts{X} = $opts{N} = $opts{E};
 }
 if (($opts{G} || $opts{X}) && ($opts{v} || $opts{n})) {
     croak 'Insensitivity options make no sense with English search';
@@ -37,11 +37,6 @@ my $DEBUG = delete $opts{d};
 
 our %Config;
 require 'ojconf.pl';
-
-my $pattern = shift;
-if ($pattern =~ s#^/##) {
-    $opts{slash} = 1;
-}
 
 if (@ARGV < 1) {
     croak 'No corpus files specified' if not $Config{files};
@@ -54,7 +49,7 @@ my $totfound;
 our $divider;
 
 while (my $tu = read_text_unit()) {
-    my @found = $tu->match($pattern, \%opts);
+    my @found = $tu->match(\%opts);
     next if @found < 1;
     $totfound += @found;
 
@@ -212,9 +207,10 @@ Contracted (elided) segments in forms like /t[ö] ip-u/ DV say-FIN, because they
 included in the overt phonetics, are NOT matched in searching. I.e. you can find this
 sequence with a pattern like "/tip", but not "/töip".
 
-When using -v option, search pattern must be specified using ONLY neutral vowels i, e, o.
+When using -v option, search pattern MUST be specified using ONLY neutral vowels i, e, o.
 
-When using -n option, search pattern must be specified using ONLY voiceless consonants.
+When using -n option, search pattern SHOULD be specified using only voiceless consonants, for
+best results.
 
 =head1 AUTHOR
 
