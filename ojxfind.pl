@@ -19,7 +19,7 @@ getopts('hdvnfTMGXNPEJ', \%opts);
 
 if ($opts{h}) {
     unless (exec('perldoc', '-Tt', catfile($FindBin::Bin, $FindBin::Script))) {
-        print STDERR "Usage: ojgrepper.pl [options] CMD pattern [corpusfile(s)]\n";
+        print STDERR "Usage: ojxfind.pl [options] CMD pattern [corpusfile(s)]\n";
         exit 1;
     }
     ## NOT REACHED - END OF PROGRAM
@@ -36,7 +36,7 @@ if (($opts{G} || $opts{X}) && ($opts{v} || $opts{n})) {
 my $DEBUG = delete $opts{d};
 
 our %Config;
-require 'ojconf.pl';
+require 'ojxconf.pl';
 
 my $pattern = shift;
 if ($pattern =~ s#^/##) {
@@ -169,12 +169,12 @@ __END__
 
 =head1 NAME
 
-ojgrepper.pl - Extract patterns from Old Japanese exegeses
+ojxfind.pl - Extract patterns from Old Japanese exegeses
 
 =head1 SYNOPSIS
 
-   ojgrepper.pl [options] CMD pattern [corpusfile(s)]
-   ojgrepper.pl -h
+   ojxfind.pl [options] CMD pattern [corpusfile(s)]
+   ojxfind.pl -h
 
    CMD is one of -T, -M, -G, -X, -N, -P, -J, -E. Meaning is to search in:
        -T  T field of interlinear format
@@ -205,8 +205,8 @@ only alphabetic characters (including diacritics, etc).  Although this is intend
 finding romanized Japanese, sometimes English matches will turn up in the Notes.
 
 If corpus files are specified on the command line, only those specified are used; if
-none are given, the ones listed in ojconf.pl are used as defaults. Files specified on
-the commmand line are NOT combined with those listed in ojconf.pl - it's either/or.
+none are given, the ones listed in ojxconf.pl are used as defaults. Files specified on
+the commmand line are NOT combined with those listed in ojxconf.pl - it's either/or.
 
 Contracted (elided) segments in forms like /t[ö] ip-u/ DV say-FIN, because they are not
 included in the overt phonetics, are NOT matched in searching. I.e. you can find this

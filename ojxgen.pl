@@ -18,14 +18,14 @@ getopts('hdn:', \%opts);
 
 if ($opts{h}) {
     unless (exec('perldoc', '-Tt', catfile($FindBin::Bin, $FindBin::Script))) {
-        print STDERR "Usage: ojreader.pl [options] inputfile [corpusfile(s)]\n";
+        print STDERR "Usage: ojxgen.pl [options] inputfile [corpusfile(s)]\n";
         exit 1;
     }
     ## NOT REACHED - END OF PROGRAM
 }
 
 our %Config;
-require 'ojconf.pl';
+require 'ojxconf.pl';
 
 my $max_jukugolen = $Config{jukugolen} || 4;  ## longest possible kanji compound
 
@@ -156,12 +156,12 @@ __END__
 
 =head1 NAME
 
-ojreader.pl - Read Old Japanese text and generate exegetical templates
+ojxgen.pl - Read Old Japanese text and generate exegetical templates
 
 =head1 SYNOPSIS
 
-   ojreader.pl [options] inputfile [corpusfile(s)]
-   ojreader.pl -h
+   ojxgen.pl [options] inputfile [corpusfile(s)]
+   ojxgen.pl -h
 
    Options:
        -n<#> Start line numbering from number given
@@ -171,7 +171,7 @@ ojreader.pl - Read Old Japanese text and generate exegetical templates
 =head1 DESCRIPTION
 
 If corpus files are specified on the command line, only those specified are used;
-if none are given, the ones listed in ojconf.pl are used.
+if none are given, the ones listed in ojxconf.pl are used.
 
 =head1 AUTHOR
 
