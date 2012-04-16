@@ -36,7 +36,7 @@ if (($opts{G} || $opts{X}) && ($opts{v} || $opts{n})) {
 my $DEBUG = delete $opts{d};
 
 our %Config;
-require 'ojconf.pl';
+require 'ojxconf.pl';
 
 if (@ARGV < 1) {
     croak 'No corpus files specified' if not $Config{files};
@@ -200,8 +200,8 @@ only alphabetic characters (including diacritics, etc).  Although this is intend
 finding romanized Japanese, sometimes English matches will turn up in the Notes.
 
 If corpus files are specified on the command line, only those specified are used; if
-none are given, the ones listed in ojconf.pl are used as defaults. Files specified on
-the commmand line are NOT combined with those listed in ojconf.pl - it's either/or.
+none are given, the ones listed in ojxconf.pl are used as defaults. Files specified on
+the commmand line are NOT combined with those listed in ojxconf.pl - it's either/or.
 
 Contracted (elided) segments in forms like /t[ö] ip-u/ DV say-FIN, because they are not
 included in the overt phonetics, are NOT matched in searching. I.e. you can find this

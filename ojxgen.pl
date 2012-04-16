@@ -25,7 +25,7 @@ if ($opts{h}) {
 }
 
 our %Config;
-require 'ojconf.pl';
+require 'ojxconf.pl';
 
 my $max_jukugolen = $Config{jukugolen} || 4;  ## longest possible kanji compound
 
@@ -171,7 +171,7 @@ ojxgen.pl - Read Old Japanese text and generate exegetical templates
 =head1 DESCRIPTION
 
 If corpus files are specified on the command line, only those specified are used;
-if none are given, the ones listed in ojconf.pl are used.
+if none are given, the ones listed in ojxconf.pl are used.
 
 =head1 AUTHOR
 
