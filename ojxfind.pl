@@ -19,7 +19,7 @@ getopts('hdvnfT:M:G:X:N:P:E:J:', \%opts);
 
 if ($opts{h}) {
     unless (exec('perldoc', '-Tt', catfile($FindBin::Bin, $FindBin::Script))) {
-        print STDERR "Usage: ojgrepper.pl [options] CMD pattern [corpusfile(s)]\n";
+        print STDERR "Usage: ojxfind.pl [options] CMD pattern [corpusfile(s)]\n";
         exit 1;
     }
     ## NOT REACHED - END OF PROGRAM
@@ -164,12 +164,12 @@ __END__
 
 =head1 NAME
 
-ojgrepper.pl - Extract patterns from Old Japanese exegeses
+ojxfind.pl - Extract patterns from Old Japanese exegeses
 
 =head1 SYNOPSIS
 
-   ojgrepper.pl [options] CMD pattern [corpusfile(s)]
-   ojgrepper.pl -h
+   ojxfind.pl [options] CMD pattern [corpusfile(s)]
+   ojxfind.pl -h
 
    CMD is one of -T, -M, -G, -X, -N, -P, -J, -E. Meaning is to search in:
        -T  T field of interlinear format
