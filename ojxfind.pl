@@ -30,9 +30,6 @@ if ($opts{J}) {
 if ($opts{E}) {
     $opts{G} = $opts{X} = $opts{N} = $opts{E};
 }
-if (($opts{G} || $opts{X}) && ($opts{v} || $opts{n})) {
-    croak 'Insensitivity options make no sense with English search';
-}
 my $DEBUG = delete $opts{d};
 
 our %Config;
@@ -177,9 +174,12 @@ ojxfind.pl - Extract patterns from Old Japanese exegeses
        -G  G field of interlinear format
        -X  translation
        -N  notes
-       -P  name field (think: "pull" texts matching a name; implies -f)
        -J  fields containing Japanese (M, N)
        -E  fields containing English (G, X, N)
+
+       -P  name field
+           Don't search, but simply display texts whose name matches
+           (think: P for "pull"; implies -f)
 
    Options:
        -v  Kou/otu insensitive: treat vowels as though merged
