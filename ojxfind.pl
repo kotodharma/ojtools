@@ -155,6 +155,7 @@ sub logg {
 ## match M's across mulitple plines in a single line
 ## coloring of match text
 ## Make sure the wo's in kwo (girl) and wotoko (man) are distinguished where they need to be!
+##   * also (related), don't match Nsa for sa (e.g.), unless -n is specified. Hard!
 ## do something different - powerful - with T-line searching
 ##   - pull out manyogana matching a given phonetic pattern
 ## rename slash fergodsake
