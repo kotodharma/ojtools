@@ -151,6 +151,10 @@ sub readfreq {
 
 ## Meta-function: convert phonetic readings throughout all corpus files when
 ##   updating readings for a given man'yougana/semantogram.
+#
+# generate (preferred) A or B readings based on specs on T line (which should be
+#    rethought)
+#
 __END__
 =pod
 
