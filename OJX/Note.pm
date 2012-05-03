@@ -1,4 +1,4 @@
-package OJ::Note;
+package OJX::Note;
 
 use strict;
 use utf8;

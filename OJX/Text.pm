@@ -1,4 +1,4 @@
-package OJ::Text;
+package OJX::Text;
 
 use strict;
 use 5.6.1;
