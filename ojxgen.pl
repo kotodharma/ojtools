@@ -4,7 +4,8 @@ use strict;
 use 5.6.1;
 use utf8;
 use open qw(:std :utf8);
-use OJText;# qw(OJ::Text::get_kanjiyomi);
+              ## use OJText;# qw(OJ::Text::get_kanjiyomi);
+use Module::Pluggable search_path => qw(OJX); eval "use $_" for plugins();
 use Getopt::Std;
 use File::Spec::Functions;
 use FindBin ();
@@ -50,7 +51,7 @@ while (<>) {
     next unless /^(\d+) T /;
     my @kanji;
     eval {
-        @kanji = OJ::Text->get_kanjiyomi($_);
+        @kanji = OJX::Text->get_kanjiyomi($_);
     };
     if ($@) {
         carp "$corpusfile line $line: $@\n";

@@ -55,10 +55,10 @@ sub line {
     my $self = shift;
     my($ln, $lt, $cont) = @_;
     $ln = int($ln);
-    my $line = $self->{$ln} ||= [ OJ::Pline->new ];
+    my $line = $self->{$ln} ||= [ OJX::Pline->new ];
     my $pline = $line->[-1];
     if ($pline->$lt) {
-        push(@{ $line }, $pline = OJ::Pline->new);
+        push(@{ $line }, $pline = OJX::Pline->new);
     }
     $pline->$lt($cont);
 }

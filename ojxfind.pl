@@ -4,7 +4,7 @@ use strict;
 use 5.6.1;
 use utf8;
 use open qw(:std :utf8);
-use OJText;
+use Module::Pluggable search_path => qw(OJX); eval "use $_" for plugins();
 use Getopt::Std;
 use File::Spec::Functions;
 use FindBin ();
@@ -100,7 +100,7 @@ sub read_text_unit {
             if (ref $text) {
                 logg "Text missing its end marker";
             }
-            $text = new OJ::Text($name, $cfile);
+            $text = new OJX::Text($name, $cfile);
             $text->raw($_);
             next;
         }
