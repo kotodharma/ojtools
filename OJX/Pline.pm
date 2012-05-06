@@ -1,4 +1,4 @@
-package OJx::Pline;
+package OJX::Pline;
 
 use strict;
 use utf8;

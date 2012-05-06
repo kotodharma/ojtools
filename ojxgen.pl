@@ -4,8 +4,7 @@ use strict;
 use 5.6.1;
 use utf8;
 use open qw(:std :utf8);
-              ## use OJText;# qw(OJ::Text::get_kanjiyomi);
-use Module::Pluggable search_path => qw(OJX); eval "use $_" for plugins();
+use OJX::Text qw(get_kanjiyomi);
 use Getopt::Std;
 use File::Spec::Functions;
 use FindBin ();
@@ -13,9 +12,11 @@ use Carp;
 # use Encode;
 # binmode STDIN, ":utf8";
 # binmode STDOUT, ":utf8";
+sub logg;
 
 our %opts;
 getopts('hdn:', \%opts);
+my $DEBUG = delete $opts{d};
 
 if ($opts{h}) {
     unless (exec('perldoc', '-Tt', catfile($FindBin::Bin, $FindBin::Script))) {
@@ -42,7 +43,7 @@ my $line = 0;
 while (<>) {
     if ($ARGV ne $corpusfile) {
         $corpusfile = $ARGV;
-        print STDERR "DEBUG: Reading corpusfile $ARGV\n" if $opts{d};
+        logg "DEBUG: Reading corpusfile $ARGV" if $DEBUG;
         $line = 0;
     }
     chomp;
@@ -141,6 +142,11 @@ sub readfreq {
     my $ax = $a =~ /\?/ ? 0 : $entry->{$a};
     my $bx = $b =~ /\?/ ? 0 : $entry->{$b};
     $bx <=> $ax;
+}
+
+sub logg {
+    my $msg = shift;
+    print STDERR "$msg\n";
 }
 
 ## Should we store ??s in Dict at all? (y - i think so) Should we point

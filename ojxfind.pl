@@ -4,7 +4,8 @@ use strict;
 use 5.6.1;
 use utf8;
 use open qw(:std :utf8);
-use Module::Pluggable search_path => qw(OJX); eval "use $_" for plugins();
+# use Module::Pluggable search_path => qw(OJX);
+use OJX::Text;
 use Getopt::Std;
 use File::Spec::Functions;
 use FindBin ();
@@ -16,6 +17,10 @@ sub logg;
 
 our %opts;
 getopts('hdvnfTMGXNPEJ', \%opts);
+my $DEBUG = delete $opts{d};
+
+logg sprintf("DEBUG: INC=%s", @INC) if $DEBUG;
+# for (plugins()) { logg "DEBUG: Loading $_" if $DEBUG; eval "use $_;"; warn $@ if $@; }
 
 if ($opts{h}) {
     unless (exec('perldoc', '-Tt', catfile($FindBin::Bin, $FindBin::Script))) {
@@ -33,7 +38,6 @@ if ($opts{E}) {
 if (($opts{G} || $opts{X}) && ($opts{v} || $opts{n})) {
     croak 'Insensitivity options make no sense with English search';
 }
-my $DEBUG = delete $opts{d};
 
 our %Config;
 require 'ojxconf.pl';
@@ -149,7 +153,8 @@ sub disp_out {
 
 sub logg {
     my $msg = shift;
-    print STDERR "$cfile, line $line: $msg\n";
+    print STDERR "$cfile, line $line: " if $cfile;
+    print STDERR "$msg\n";
 }
 
 ## match M's across mulitple plines in a single line
@@ -162,9 +167,10 @@ sub logg {
 ## pull out allomorphs based on grammar gloss (i.e. put in CAUS, get -simey, etc)!!!
 ## OO getter semantics for object methods (line, xlat, notes)
 ## -l option : only print names of texts matching pattern
-## match on text names?
+## match on text names? (done?)
 ## rationalize logging with use of Carp calls
 ## multiple commands, strung together, with conjunctive semantics? disjuctive ha?!?!?
+## make DEBUG output lines colored (red?)
 __END__
 =pod
 
