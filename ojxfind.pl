@@ -157,20 +157,6 @@ sub logg {
     print STDERR "$msg\n";
 }
 
-## match M's across mulitple plines in a single line
-## coloring of match text
-## Make sure the wo's in kwo (girl) and wotoko (man) are distinguished where they need to be!
-##   * also (related), don't match Nsa for sa (e.g.), unless -n is specified. Hard!
-## do something different - powerful - with T-line searching
-##   - pull out manyogana matching a given phonetic pattern
-## rename slash fergodsake
-## pull out allomorphs based on grammar gloss (i.e. put in CAUS, get -simey, etc)!!!
-## OO getter semantics for object methods (line, xlat, notes)
-## -l option : only print names of texts matching pattern
-## match on text names? (done?)
-## rationalize logging with use of Carp calls
-## multiple commands, strung together, with conjunctive semantics? disjuctive ha?!?!?
-## make DEBUG output lines colored (red?)
 __END__
 =pod
 

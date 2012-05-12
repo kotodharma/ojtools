@@ -32,6 +32,8 @@ require 'ojxconf.pl';
 my $max_jukugolen = $Config{jukugolen} || 4;  ## longest possible kanji compound
 
 my $infile = shift;
+croak "No input file specified" unless $infile;
+
 if (@ARGV < 1) {
     croak 'No corpus files specified' if not $Config{files};
     my @globs = split /\s*,\s*/, $Config{files};
@@ -149,19 +151,6 @@ sub logg {
     print STDERR "$msg\n";
 }
 
-## Should we store ??s in Dict at all? (y - i think so) Should we point
-##   out where they occur in the corpus if we have better data to replace
-##   them with? (how?)
-
-## Specialized behavior for when reading is something like two? with a ?
-##    included (WTF does this mean? -dji)
-
-## Meta-function: convert phonetic readings throughout all corpus files when
-##   updating readings for a given man'yougana/semantogram.
-#
-# generate (preferred) A or B readings based on specs on T line (which should be
-#    rethought)
-#
 __END__
 =pod
 
