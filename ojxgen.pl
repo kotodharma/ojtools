@@ -4,7 +4,7 @@ use strict;
 use 5.6.1;
 use utf8;
 use open qw(:std :utf8);
-use OJText;# qw(OJ::Text::get_kanjiyomi);
+use OJX::Text qw(get_kanjiyomi);
 use Getopt::Std;
 use File::Spec::Functions;
 use FindBin ();
@@ -12,9 +12,11 @@ use Carp;
 # use Encode;
 # binmode STDIN, ":utf8";
 # binmode STDOUT, ":utf8";
+sub logg;
 
 our %opts;
 getopts('hdn:', \%opts);
+my $DEBUG = delete $opts{d};
 
 if ($opts{h}) {
     unless (exec('perldoc', '-Tt', catfile($FindBin::Bin, $FindBin::Script))) {
@@ -30,6 +32,8 @@ require 'ojxconf.pl';
 my $max_jukugolen = $Config{jukugolen} || 4;  ## longest possible kanji compound
 
 my $infile = shift;
+croak "No input file specified" unless $infile;
+
 if (@ARGV < 1) {
     croak 'No corpus files specified' if not $Config{files};
     my @globs = split /\s*,\s*/, $Config{files};
@@ -41,7 +45,7 @@ my $line = 0;
 while (<>) {
     if ($ARGV ne $corpusfile) {
         $corpusfile = $ARGV;
-        print STDERR "DEBUG: Reading corpusfile $ARGV\n" if $opts{d};
+        logg "DEBUG: Reading corpusfile $ARGV" if $DEBUG;
         $line = 0;
     }
     chomp;
@@ -50,7 +54,7 @@ while (<>) {
     next unless /^(\d+) T /;
     my @kanji;
     eval {
-        @kanji = OJ::Text->get_kanjiyomi($_);
+        @kanji = OJX::Text->get_kanjiyomi($_);
     };
     if ($@) {
         carp "$corpusfile line $line: $@\n";
@@ -142,15 +146,11 @@ sub readfreq {
     $bx <=> $ax;
 }
 
-## Should we store ??s in Dict at all? (y - i think so) Should we point
-##   out where they occur in the corpus if we have better data to replace
-##   them with? (how?)
+sub logg {
+    my $msg = shift;
+    print STDERR "$msg\n";
+}
 
-## Specialized behavior for when reading is something like two? with a ?
-##    included (WTF does this mean? -dji)
-
-## Meta-function: convert phonetic readings throughout all corpus files when
-##   updating readings for a given man'yougana/semantogram.
 __END__
 =pod
 

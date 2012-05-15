@@ -1,9 +1,11 @@
-package OJ::Text;
+package OJX::Text;
 
 use strict;
 use 5.6.1;
 use utf8;
 use Carp;
+use OJX::Pline;
+use OJX::Note;
 
 
 ########################################################################################
@@ -55,10 +57,10 @@ sub line {
     my $self = shift;
     my($ln, $lt, $cont) = @_;
     $ln = int($ln);
-    my $line = $self->{$ln} ||= [ OJ::Pline->new ];
+    my $line = $self->{$ln} ||= [ OJX::Pline->new ];
     my $pline = $line->[-1];
     if ($pline->$lt) {
-        push(@{ $line }, $pline = OJ::Pline->new);
+        push(@{ $line }, $pline = OJX::Pline->new);
     }
     $pline->$lt($cont);
 }
@@ -130,7 +132,7 @@ sub match {
         for (my $n = 1; ; $n++) {
             my $la = $self->{$n} || last;
             foreach my $pline (@{ $la }) {
-                if (my $p = $pline->match($pat, $cmds)) {
+                if ($pline->match($pat, $cmds)) {
                     push(@found, $pline);
                 }
             }

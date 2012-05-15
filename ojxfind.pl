@@ -4,7 +4,8 @@ use strict;
 use 5.6.1;
 use utf8;
 use open qw(:std :utf8);
-use OJText;
+# use Module::Pluggable search_path => qw(OJX);
+use OJX::Text;
 use Getopt::Std;
 use File::Spec::Functions;
 use FindBin ();
@@ -16,6 +17,10 @@ sub logg;
 
 our %opts;
 getopts('hdvnfT:M:G:X:N:P:E:J:', \%opts);
+my $DEBUG = delete $opts{d};
+
+logg sprintf("DEBUG: INC=%s", @INC) if $DEBUG;
+# for (plugins()) { logg "DEBUG: Loading $_" if $DEBUG; eval "use $_;"; warn $@ if $@; }
 
 if ($opts{h}) {
     unless (exec('perldoc', '-Tt', catfile($FindBin::Bin, $FindBin::Script))) {
@@ -30,7 +35,6 @@ if ($opts{J}) {
 if ($opts{E}) {
     $opts{G} = $opts{X} = $opts{N} = $opts{E};
 }
-my $DEBUG = delete $opts{d};
 
 our %Config;
 require 'ojxconf.pl';
@@ -92,7 +96,7 @@ sub read_text_unit {
             if (ref $text) {
                 logg "Text missing its end marker";
             }
-            $text = new OJ::Text($name, $cfile);
+            $text = new OJX::Text($name, $cfile);
             $text->raw($_);
             next;
         }
@@ -141,21 +145,10 @@ sub disp_out {
 
 sub logg {
     my $msg = shift;
-    print STDERR "$cfile, line $line: $msg\n";
+    print STDERR "$cfile, line $line: " if $cfile;
+    print STDERR "$msg\n";
 }
 
-## match M's across mulitple plines in a single line
-## coloring of match text
-## Make sure the wo's in kwo (girl) and wotoko (man) are distinguished where they need to be!
-## do something different - powerful - with T-line searching
-##   - pull out manyogana matching a given phonetic pattern
-## rename slash fergodsake
-## pull out allomorphs based on grammar gloss (i.e. put in CAUS, get -simey, etc)!!!
-## OO getter semantics for object methods (line, xlat, notes)
-## -l option : only print names of texts matching pattern
-## match on text names?
-## rationalize logging with use of Carp calls
-## multiple commands, strung together, with conjunctive semantics? disjuctive ha?!?!?
 __END__
 =pod
 
