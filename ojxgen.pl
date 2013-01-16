@@ -1,4 +1,9 @@
 #!/usr/bin/perl -CLADS
+###
+###
+### new stuff: make header line and % optional
+###
+###
 
 use strict;
 use 5.6.1;
@@ -15,7 +20,7 @@ use Carp;
 sub logg;
 
 our %opts;
-getopts('hdn:', \%opts);
+getopts('hdn:k:', \%opts);
 my $DEBUG = delete $opts{d};
 
 if ($opts{h}) {
@@ -114,8 +119,9 @@ while (<INFILE>) {
             push(@reads, ('>>') x ($len - 1), $ph);
             shift @kanji for (1..$len);
         }
-        printf "%02d T $line %s\n%02d M %s\n%02d G \n\n",
-            $ln, join(' ', @reads), $ln, compose(@reads), $ln;
+        my $prec = $opts{k} || 2;  ## precision (width) of line number fields
+        printf "%.*d T $line %s\n%.*d M %s\n%.*d G \n\n",
+            $prec, $ln, join(' ', @reads), $prec, $ln, compose(@reads), $prec, $ln;
         $ln++;
     }
     print "%\n";
@@ -183,6 +189,7 @@ ojxgen.pl - Read Old Japanese text and generate exegetical templates
 
    Options:
        -n<#> Start line numbering from number given
+       -k<#> number of digits of padded width for line numbers (default = 2)
        -d    Give debugging output (where available)
        -h    Print this documentation (help)
 
@@ -197,6 +204,6 @@ David J. Iannucci <djiann@hawaii.edu>
 
 =head1 VERSION
 
- 0.43.1
+ 0.43.2
 
 =cut
