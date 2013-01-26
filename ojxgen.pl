@@ -1,9 +1,4 @@
 #!/usr/bin/perl -CLADS
-###
-###
-### new stuff: make header line and % optional
-###
-###
 
 use strict;
 use 5.6.1;
@@ -46,40 +41,42 @@ if (@ARGV < 1) {
 }
 my(%Dict, $corpusfile);
 
-my $line = 0;
-while (<>) {
-    if ($ARGV ne $corpusfile) {
-        $corpusfile = $ARGV;
-        logg "DEBUG: Reading corpusfile $ARGV" if $DEBUG;
-        $line = 0;
-    }
-    chomp;
-    $line++;
-
-    next unless /^(\d+) T /;
-    my @kanji;
-    eval {
-        @kanji = OJX::Text->get_kanjiyomi($_);
-    };
-    if ($@) {
-        carp "$corpusfile line $line: $@\n";
-        next;
-    }
-    my @mknc;
-    while(my($ji, $read) = splice(@kanji, 0, 2)) {
-        if ($read eq '>>') {
-            push(@mknc, $ji);
-            if (@mknc >= $max_jukugolen) {
-                croak sprintf "%s line %d: Jukugo of len > %d are not recognized\n",
-                    $corpusfile, $line, $max_jukugolen;
-            }
+BUILD_DICTIONARY: {
+    my $line = 0;
+    while (<>) {
+        if ($ARGV ne $corpusfile) {
+            $corpusfile = $ARGV;
+            logg "DEBUG: Reading corpusfile $ARGV" if $DEBUG;
+            $line = 0;
         }
-        else {
-            if (@mknc) {
-                $ji = join('', (@mknc, $ji));
-                @mknc = ();
+        chomp;
+        $line++;
+
+        next unless /^(\d+) T /;
+        my @kanji;
+        eval {
+            @kanji = OJX::Text->get_kanjiyomi($_);
+        };
+        if ($@) {
+            carp "$corpusfile line $line: $@\n";
+            next;
+        }
+        my @mknc;
+        while(my($ji, $read) = splice(@kanji, 0, 2)) {
+            if ($read eq '>>') {
+                push(@mknc, $ji);
+                if (@mknc >= $max_jukugolen) {
+                    croak sprintf "%s line %d: Jukugo of len > %d are not recognized\n",
+                        $corpusfile, $line, $max_jukugolen;
+                }
             }
-            $Dict{$ji}{$read}++;
+            else {
+                if (@mknc) {
+                    $ji = join('', (@mknc, $ji));
+                    @mknc = ();
+                }
+                $Dict{$ji}{$read}++;
+            }
         }
     }
 }
@@ -88,18 +85,36 @@ unless (scalar(keys %Dict)) {
     die "No corpora found";
 }
 
-open(INFILE, $infile) or die "Cannot open input file $infile";
+READ_INPUT: {
+    open(INFILE, $infile) or die "Cannot open input file $infile";
+    my @lines;
+    while (<INFILE>) {
+        chomp;
+        s/^\s*//;     # strip leading whitespace
+        next if /^#/; # skip comments
+        if (/^$/) {
+            ## found blank line at the end of a chunk/poem
+            process_chunk(@lines);
+            @lines = ();
+            next;
+        } push(@lines, $_);
+    }
+    close INFILE;
+    process_chunk(@lines) if @lines;
+}
 
-while (<INFILE>) {
-    chomp;
-    s/^\s*//; # strip leading whitespace
-    next if /^$/ || /^#/; # skip empty lines and comments
+sub process_chunk {
+    my @lines = @_;
 
-    my $delim = qr/\/|\(\d+\)/o;
-    my @lines = split /\s*$delim\s*/;
-    my $name = ($lines[0] =~ /[a-z0-9]/i) ? shift(@lines) : 'NO_NAME';
-    print "$name ===========================================================\n\n";
-
+    my $name;
+    if ($lines[0] =~ /^N:(.*)$/) {
+        ## Might need to accomodate other kinds of metadata in future.
+        $name = $1;
+        $name =~ s/^\s*//;  # strip leading whitespace
+        $name ||= 'Unknown';
+        printf "%s ===========================================================\n\n", $name,
+        shift @lines;
+    }
     my $ln = $opts{n} || 1;
     foreach my $line (@lines) {
         my @reads;
@@ -124,9 +139,8 @@ while (<INFILE>) {
             $prec, $ln, join(' ', @reads), $prec, $ln, compose(@reads), $prec, $ln;
         $ln++;
     }
-    print "%\n";
+    print "%\n" if $name;  ## only include footer for shorter, named texts
 }
-close INFILE;
 
 our $entry;
 
@@ -197,6 +211,10 @@ ojxgen.pl - Read Old Japanese text and generate exegetical templates
 
 If corpus files are specified on the command line, only those specified are used;
 if none are given, the ones listed in ojxconf.pl are used.
+
+=head1 TODO
+
+Document the input file format!
 
 =head1 AUTHOR
 
