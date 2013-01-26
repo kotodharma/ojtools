@@ -97,7 +97,8 @@ READ_INPUT: {
             process_chunk(@lines);
             @lines = ();
             next;
-        } push(@lines, $_);
+        }
+        push(@lines, $_);
     }
     close INFILE;
     process_chunk(@lines) if @lines;
@@ -112,7 +113,7 @@ sub process_chunk {
         $name = $1;
         $name =~ s/^\s*//;  # strip leading whitespace
         $name ||= 'Unknown';
-        printf "%s ===========================================================\n\n", $name,
+        printf "%s ===========================================================\n\n", $name;
         shift @lines;
     }
     my $ln = $opts{n} || 1;
@@ -135,8 +136,8 @@ sub process_chunk {
             shift @kanji for (1..$len);
         }
         my $prec = $opts{k} || 2;  ## precision (width) of line number fields
-        printf "%.*d T $line %s\n%.*d M %s\n%.*d G \n\n",
-            $prec, $ln, join(' ', @reads), $prec, $ln, compose(@reads), $prec, $ln;
+        printf "%.*d T %s %s\n%.*d M %s\n%.*d G \n\n",
+            $prec, $ln, $line, join(' ', @reads), $prec, $ln, compose(@reads), $prec, $ln;
         $ln++;
     }
     print "%\n" if $name;  ## only include footer for shorter, named texts
@@ -155,7 +156,7 @@ sub jibiku {
 }
 
 sub compose {
-    my @r = grep { $_ ne '>>' } @_;
+    my @r = grep { $_ ne '>>' && $_ ne '_' } @_;
     map { s/\|.*// } @r;
     join('', @r);
 }
@@ -173,7 +174,7 @@ sub logg {
 
 __END__
 
-  Copyright 2012 David J. Iannucci
+  Copyright 2012,2013 David J. Iannucci
 
   This file is part of ojtools.
 
@@ -207,14 +208,14 @@ ojxgen.pl - Read Old Japanese text and generate exegetical templates
        -d    Give debugging output (where available)
        -h    Print this documentation (help)
 
-=head1 DESCRIPTION
+=head1 USAGE
 
 If corpus files are specified on the command line, only those specified are used;
 if none are given, the ones listed in ojxconf.pl are used.
 
-=head1 TODO
+=head1 INPUT FORMAT
 
-Document the input file format!
+Document this!!
 
 =head1 AUTHOR
 
