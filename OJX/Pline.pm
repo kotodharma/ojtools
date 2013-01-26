@@ -96,7 +96,7 @@ sub toString {
 1;
 __END__
 
-  Copyright 2012 David J. Iannucci
+  Copyright 2012,2013 David J. Iannucci
 
   This file is part of ojtools.
 
