@@ -29,8 +29,8 @@ sub match {
     }
     elsif ($cmds->{M}) {
         $dat = $cmds->{slash} ? $self->P : $self->M;
-        $dat =~ s/^\d\d ?[MP]//; ## remove the line no and type code
-        $dat =~ s/\[.*?\]//g;    ## remove contraction-elided segments
+        $dat =~ s/^\d+ ?[MP]//; ## remove the line no and type code
+        $dat =~ s/\[.*?\]//g;   ## remove contraction-elided segments
     }
     elsif ($cmds->{G}) {
         $dat = $self->G;
