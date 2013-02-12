@@ -133,7 +133,7 @@ sub read_text_unit {
         if (/^%/) {
             return $text;
         }
-        elsif (/^(\d\d) (T|M|G) /) {
+        elsif (/^(\d+) (T|M|G) /) {
             $text->line($1, $2, $_);
         }
         elsif (/^("|\d\d?\.|[*])/) {
